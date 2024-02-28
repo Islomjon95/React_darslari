@@ -9,7 +9,8 @@ class App extends React.Component {
             name: "",
             job: "",
             user: users,
-            search: "id"
+            search: "id",
+            active: null
 
         }
     }
@@ -30,16 +31,16 @@ class App extends React.Component {
             this.setState({ user: res })
         }
 
-        const onSelect = (e)=>{
-            this.setState({search: e.target.value})
+        const onSelect = (e) => {
+            this.setState({ search: e.target.value })
         }
-        const onChange = (e)=>{
+        const onChange = (e) => {
             this.setState({
                 [e.target.name]: e.target.value
             })
         }
 
-        const onAdd = ()=>{
+        const onAdd = () => {
             let id = this.state.user[this.state.user.length - 1].id
             let newUser = {
                 id: ++id,
@@ -55,13 +56,30 @@ class App extends React.Component {
             })
 
         }
+
+        const onEdit = ({ id, name, job }, isSave) => {
+            if (isSave) {
+                let res = this.state.user.map(value=>{
+                   return value.id === this.state.active.id ? {...value, name: this.state.name, job: this.state.job} : value
+                })
+                this.setState({
+                    user: res,
+                    active: null,
+                    name: "",
+                    job: ""
+                })
+            } else {
+                this.setState({ active: { id, name, job }, name: name, job: job })
+
+            }
+        }
         return (
             <div className="container">
 
                 <h1>Name: {this.state.name}</h1>
                 <h1>Job: {this.state.job}</h1>
 
-                <input name="name" value={this.state.name} onChange={onChange}  type="text" placeholder="Name" />
+                <input name="name" value={this.state.name} onChange={onChange} type="text" placeholder="Name" />
                 <input name="job" value={this.state.job} onChange={onChange} type="text" placeholder="Job" />
                 <button onClick={onAdd}>Add</button>
 
@@ -89,24 +107,24 @@ class App extends React.Component {
                         {
                             this.state.user.length ? (
                                 this.state.user.map(({ id, name, job }) => {
-                                return (
-                                    <tr key={id}>
-                                        <td>{id}</td>
-                                        <td>{name}</td>
-                                        <td>{job}</td>
-                                        <td>
-                                            <button>
-                                                Edit
-                                            </button>
-                                        </td>
-                                        <td>
-                                            <button onClick={() => onDelete(id)}>
-                                                Delete
-                                            </button>
-                                        </td>
-                                    </tr>
-                                )
-                            })) : (
+                                    return (
+                                        <tr key={id}>
+                                            <td>{id}</td>
+                                            <td>{this.state.active?.id===id? <input name="name" onChange={onChange} value={this.state.name} type="text" /> : name}</td>
+                                            <td>{this.state.active?.id===id? <input name="job"  onChange={onChange} value={this.state.job}type="text" /> : job}</td>
+                                            <td>
+                                                <button onClick={() => onEdit({ id, name, job }, this.state.active?.id === id)}>
+                                                    {this.state.active?.id === id ? "save" : "edit"}
+                                                </button>
+                                            </td>
+                                            <td>
+                                                <button onClick={() => onDelete(id)}>
+                                                    Delete
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    )
+                                })) : (
                                 <tr>
                                     <th colSpan={5}>
                                         <h1>No data</h1>
