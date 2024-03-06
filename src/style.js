@@ -1,7 +1,6 @@
 import styled, { css, keyframes } from "styled-components"
 
 export const Container = styled.div`
-    background: orange;
     width: 100%;
     height: 100vh;
     height: fit-content;
@@ -10,7 +9,7 @@ export const Container = styled.div`
 `
 
 export const Title = styled('h1')`
-    color: white;
+   
     text-align: center;
     font-size: 60px;
 `
@@ -51,7 +50,6 @@ const reusable = css`
     text-align: justify;
     padding: 5px 10px;
     font-size: 20px;
-    color: white;
     `
 
 export const Description = styled.p`
@@ -94,7 +92,8 @@ export const CircleAnime = styled.div`
     align-items: center;
     animation: ${anime} 2s linear infinite;
     animation-direction: ${direct};
-    background: white;
+    background: ${(props)=>props.theme.bg==="black"? "white" : "black"};
+    color: ${(props)=>props.theme.cl==="black"? "white" : "black"};
     border-radius: 50%;
     `
 
@@ -105,3 +104,11 @@ export const Button = styled.button`
         height: fit-content;
         padding: 5px 10px;
     `
+
+export const ModeChanger = styled(Button)`
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    position: fixed;
+    right: 0;    
+`

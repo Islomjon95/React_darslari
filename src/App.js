@@ -1,18 +1,40 @@
 import React from "react";
-import { Container, Title, MainWrap, Box, Description, Content, CircleAnime, Button } from "./style"
+import { Container, Title, MainWrap, Box, Description, Content, CircleAnime, Button, ModeChanger } from "./style"
 import Card from "./card";
+import {ThemeProvider, createGlobalStyle} from "styled-components"
 
+
+const GlobalContainer = createGlobalStyle`
+      body{
+        background: ${(props)=>props.theme.bg};
+        color: ${(props)=>props.theme.cl};
+      }
+`
 
 
 class App extends React.Component {
 
   state={
-    direct: "normal"
+    direct: "normal",
+    mode: true
   }
 
+  
+
   render() {
+    const theme={
+       bg: this.state.mode?"white" : "black",
+       cl: this.state.mode?"black" : "white"
+    }
     return (
-      <Container>
+      <ThemeProvider theme={theme}>
+        <GlobalContainer></GlobalContainer>
+        <Container>
+        <MainWrap>
+          <ModeChanger onClick={()=>{this.setState({mode: !this.state.mode})}} >
+            {this.state.mode? "Dark" : "Light"}
+          </ModeChanger>
+        </MainWrap>
         <Title>
           Salom DAsturchilar
         </Title>
@@ -54,12 +76,20 @@ class App extends React.Component {
           <Button onClick={()=>{this.setState({direct: "reverse"})}}>Reverse</Button>
           <Button onClick={()=>{this.setState({direct: "alternate"})}}>Alternate</Button>
         </MainWrap>
+
+        
+
+        
+
+        
         
 
 
 
 
       </Container>
+       
+      </ThemeProvider>
     )
   }
 
